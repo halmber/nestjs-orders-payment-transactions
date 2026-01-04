@@ -1,0 +1,99 @@
+services:
+  # ---------------- DEV ----------------
+  app-dev:
+    profiles: ['dev']
+    build:
+      context: .
+      target: base
+    container_name: transactions-service-dev
+    command: npm run start:dev
+    environment:
+      NODE_ENV: development
+      MONGODB_URI: mongodb://mongodb-dev:27017/transactions
+      ORDERS_SERVICE_URL: http://host.docker.internal:8080
+    extra_hosts:
+      - 'host.docker.internal:host-gateway'
+    volumes:
+      - .:/app
+    ports:
+      - '3000:3000'
+    depends_on:
+      - mongodb-dev
+
+  mongodb-dev:
+    profiles: ['dev']
+    image: mongo:7.0
+    container_name: transactions-service-dev-mongodb
+    environment:
+      MONGO_INITDB_DATABASE: transactions
+    ports:
+      - '27017:27017'
+    volumes:
+      - mongodb_dev_data:/data/db
+
+  # ---------------- TEST ----------------
+  app-test:
+    profiles: ['test']
+    build:
+      context: .
+      target: test
+    container_name: transactions-service-test
+    command: npm run test:e2e
+    environment:
+      NODE_ENV: test
+      MONGODB_URI: mongodb://mongodb-test:27017/transactions-test
+    depends_on:
+      - mongodb-test
+    networks:
+      - app-network
+
+  mongodb-test:
+    profiles: ['test']
+    image: mongo:7.0
+    container_name: transactions-service-test-mongodb
+    environment:
+      MONGO_INITDB_DATABASE: transactions-test
+    tmpfs:
+      - /data/db
+    networks:
+      - app-network
+
+  # ---------------- PROD ----------------
+  app:
+    profiles: ['prod']
+    build:
+      context: .
+      target: production
+    container_name: transactions-service
+    ports:
+      - '3000:3000'
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      MONGODB_URI: mongodb://mongodb:27017/transactions
+      ORDERS_SERVICE_URL: http://host.docker.internal:8080
+    extra_hosts:
+      - 'host.docker.internal:host-gateway'
+    depends_on:
+      - mongodb
+    networks:
+      - app-network
+
+  mongodb:
+    profiles: ['prod']
+    image: mongo:7.0
+    container_name: transactions-mongodb
+    environment:
+      MONGO_INITDB_DATABASE: transactions
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - app-network
+
+volumes:
+  mongodb_data:
+  mongodb_dev_data:
+
+networks:
+  app-network:
+    driver: bridge
