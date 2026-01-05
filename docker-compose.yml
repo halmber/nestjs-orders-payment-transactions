@@ -38,7 +38,7 @@ services:
       context: .
       target: test
     container_name: transactions-service-test
-    command: npm run test:e2e
+    command: npm run test:all
     environment:
       NODE_ENV: test
       MONGODB_URI: mongodb://mongodb-test:27017/transactions-test
@@ -55,6 +55,7 @@ services:
       MONGO_INITDB_DATABASE: transactions-test
     tmpfs:
       - /data/db
+    command: ['mongod', '--quiet', '--logpath', '/dev/null']
     networks:
       - app-network
 

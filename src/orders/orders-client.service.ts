@@ -27,16 +27,15 @@ export class OrdersClientService {
    * @returns Order data if exists
    * @throws NotFoundException if order doesn't exist
    */
-  async validateOrderExists(orderId: string): Promise<OrderResponse> {
+  async validateOrderExists(orderId: string): Promise<void> {
     try {
       this.logger.debug(`Validating order exists: ${orderId}`);
 
-      const response = await firstValueFrom(
+      await firstValueFrom(
         this.httpService.get<OrderResponse>(`/api/orders/${orderId}`),
       );
 
       this.logger.debug(`Order validated successfully: ${orderId}`);
-      return response.data;
     } catch (error) {
       if (error instanceof AxiosError) {
         if (error.response?.status === 404) {

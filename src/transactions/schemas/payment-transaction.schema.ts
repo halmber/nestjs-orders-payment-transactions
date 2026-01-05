@@ -59,6 +59,12 @@ export class PaymentTransaction {
 
   @Prop({ type: Object })
   metadata: Record<string, any>;
+
+  @Prop({ type: Date, default: Date.now })
+  createdAt?: Date;
+
+  @Prop({ type: Date, default: Date.now })
+  updatedAt?: Date;
 }
 
 export type PaymentTransactionDocument = PaymentTransaction & Document;

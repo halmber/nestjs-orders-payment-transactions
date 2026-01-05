@@ -10,6 +10,7 @@ import { CreatePaymentTransactionDto } from './dto/request/create-transaction.dt
 import { GetPaymentTransactionsDto } from './dto/request/get-transactions.dto';
 import { PaymentTransactionCountsRequestDto } from './dto/request/transaction-counts-request.dto';
 import { OrdersClientService } from '../orders/orders-client.service';
+import { PaymentTransactionResponseDto } from './dto/response/transaction-response.dto';
 
 @Injectable()
 export class TransactionsService {
@@ -26,7 +27,7 @@ export class TransactionsService {
    */
   async create(
     createTransactionDto: CreatePaymentTransactionDto,
-  ): Promise<PaymentTransaction> {
+  ): Promise<PaymentTransactionResponseDto> {
     this.logger.log(
       `Creating transaction for order: ${createTransactionDto.orderId}`,
     );
@@ -50,7 +51,7 @@ export class TransactionsService {
     const saved = await createdTransaction.save();
 
     this.logger.log(`Transaction created: ${saved._id}`);
-    return saved;
+    return this.mapToResponseDto(saved);
   }
 
   /**
@@ -58,7 +59,7 @@ export class TransactionsService {
    */
   async findByOrderId(
     getTransactionsDto: GetPaymentTransactionsDto,
-  ): Promise<PaymentTransaction[]> {
+  ): Promise<PaymentTransactionResponseDto[]> {
     const { orderId, size, from } = getTransactionsDto;
 
     this.logger.debug(
@@ -76,7 +77,7 @@ export class TransactionsService {
       `Found ${transactions.length} transactions for order ${orderId}`,
     );
 
-    return transactions;
+    return transactions.map((tx) => this.mapToResponseDto(tx));
   }
 
   /**
@@ -140,5 +141,26 @@ export class TransactionsService {
   async deleteByOrderId(orderId: string): Promise<number> {
     const result = await this.transactionModel.deleteMany({ orderId }).exec();
     return result.deletedCount;
+  }
+
+  private mapToResponseDto(
+    transaction: PaymentTransactionDocument,
+  ): PaymentTransactionResponseDto {
+    return {
+      id: transaction._id.toString(),
+      orderId: transaction.orderId,
+      amount: transaction.amount,
+      currency: transaction.currency,
+      type: transaction.type,
+      status: transaction.status,
+      paymentMethod: transaction.paymentMethod,
+      transactionReference: transaction.transactionReference,
+      description: transaction.description,
+      transactionTime: transaction.transactionTime,
+      processedBy: transaction.processedBy,
+      metadata: transaction.metadata,
+      createdAt: transaction.createdAt,
+      updatedAt: transaction.updatedAt,
+    };
   }
 }

@@ -48,9 +48,7 @@ export class TransactionsController {
   async create(
     @Body() createTransactionDto: CreatePaymentTransactionDto,
   ): Promise<PaymentTransactionResponseDto> {
-    const transaction =
-      await this.transactionsService.create(createTransactionDto);
-    return this.mapToResponseDto(transaction);
+    return await this.transactionsService.create(createTransactionDto);
   }
 
   @Get()
@@ -91,9 +89,7 @@ export class TransactionsController {
   async findByOrder(
     @Query() getTransactionsDto: GetPaymentTransactionsDto,
   ): Promise<PaymentTransactionResponseDto[]> {
-    const transactions =
-      await this.transactionsService.findByOrderId(getTransactionsDto);
-    return transactions.map((t) => this.mapToResponseDto(t));
+    return await this.transactionsService.findByOrderId(getTransactionsDto);
   }
 
   @Post('_counts')
@@ -117,25 +113,6 @@ export class TransactionsController {
   ): Promise<PaymentTransactionCountsResponseDto> {
     return {
       counts: await this.transactionsService.getCountsByOrderIds(requestDto),
-    };
-  }
-
-  private mapToResponseDto(transaction: any): PaymentTransactionResponseDto {
-    return {
-      id: transaction._id.toString(),
-      orderId: transaction.orderId,
-      amount: transaction.amount,
-      currency: transaction.currency,
-      type: transaction.type,
-      status: transaction.status,
-      paymentMethod: transaction.paymentMethod,
-      transactionReference: transaction.transactionReference,
-      description: transaction.description,
-      transactionTime: transaction.transactionTime,
-      processedBy: transaction.processedBy,
-      metadata: transaction.metadata,
-      createdAt: transaction.createdAt,
-      updatedAt: transaction.updatedAt,
     };
   }
 }
