@@ -3,9 +3,9 @@ import { INestApplication } from '@nestjs/common';
 import { MongooseModule, getModelToken } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { ConfigModule } from '@nestjs/config';
-import { TransactionsModule } from '../src/transactions/transactions.module';
-import { TransactionsService } from '../src/transactions/transactions.service';
-import { OrdersClientService } from '../src/orders/orders-client.service';
+import { TransactionsModule } from './transactions.module';
+import { TransactionsService } from './transactions.service';
+import { OrdersClientService } from '../orders/orders-client.service';
 import {
   PaymentTransaction,
   PaymentTransactionDocument,
@@ -13,7 +13,7 @@ import {
   TransactionStatus,
   PaymentMethod,
   Currency,
-} from '../src/transactions/schemas/payment-transaction.schema';
+} from './schemas/payment-transaction.schema';
 
 describe('Transactions Integration Tests', () => {
   let app: INestApplication;

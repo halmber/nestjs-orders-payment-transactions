@@ -16,10 +16,9 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/jest/bin/jest --runInBand",
-    "test:unit": "jest --testPathPattern=src/.*\\.spec\\.ts$",
-    "test:integration": "jest --config ./test/jest-integration.json",
-    "test:e2e": "jest --config ./test/jest-e2e.json",
-    "test:all": "npm run test:unit && npm run test:integration && npm run test:e2e"
+    "test:unit": "jest --selectProjects unit",
+    "test:integration": "jest --selectProjects integration",
+    "test:e2e": "jest --selectProjects e2e"
   },
   "engines": {
     "npm": ">=10.0.0",

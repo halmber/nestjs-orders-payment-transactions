@@ -13,7 +13,7 @@ RUN npm run build
 # ---------- test ----------
 FROM base AS test
 COPY . .
-CMD ["npm", "run", "test:all"]
+CMD ["npm", "run", "test"]
 
 # ---------- production ----------
 FROM node:20-alpine AS production

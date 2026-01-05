@@ -4,15 +4,15 @@ import request from 'supertest';
 import { App } from 'supertest/types';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule } from '@nestjs/config';
-import { TransactionsModule } from '../src/transactions/transactions.module';
-import { TransactionsService } from '../src/transactions/transactions.service';
-import { OrdersClientService } from '../src/orders/orders-client.service';
+import { TransactionsModule } from '../../src/transactions/transactions.module';
+import { TransactionsService } from '../../src/transactions/transactions.service';
+import { OrdersClientService } from '../../src/orders/orders-client.service';
 import {
   TransactionType,
   TransactionStatus,
   PaymentMethod,
   Currency,
-} from '../src/transactions/schemas/payment-transaction.schema';
+} from '../../src/transactions/schemas/payment-transaction.schema';
 
 describe('TransactionsController (e2e)', () => {
   let app: INestApplication<App>;

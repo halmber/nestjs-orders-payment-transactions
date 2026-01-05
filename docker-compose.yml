@@ -38,7 +38,7 @@ services:
       context: .
       target: test
     container_name: transactions-service-test
-    command: npm run test:all
+    command: npm run test
     environment:
       NODE_ENV: test
       MONGODB_URI: mongodb://mongodb-test:27017/transactions-test
